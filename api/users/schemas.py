@@ -1,3 +1,6 @@
+from typing import Annotated
+
+from annotated_types import MinLen, MaxLen
 from fastapi import HTTPException
 from pydantic import BaseModel, EmailStr, field_validator
 
@@ -15,15 +18,15 @@ class TunedModel(BaseModel):
 
 
 class ShowUser(TunedModel):
-    user_id: uuid.UUID
+    # user_id: uuid.UUID
     name: str
     surname: str
     email: EmailStr
     is_active: bool
 
 
-class UserCreate(BaseModel):
-    name: str
+class CreateUser(BaseModel):
+    name: Annotated[str, MinLen(3), MaxLen(20)]
     surname: str
     email: EmailStr
 
