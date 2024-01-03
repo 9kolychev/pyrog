@@ -18,7 +18,7 @@ router = APIRouter()
     response_model=Profile,
     status_code=status.HTTP_201_CREATED,
 )
-async def create_pie(
+async def create_profile(
     profile_in: CreateProfile,
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):

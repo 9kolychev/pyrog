@@ -1,9 +1,9 @@
+from fastapi import HTTPException
 from sqlalchemy import select
-from sqlalchemy.engine import Result
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.models import User
-from .schemas import CreateUser, UserSchema
+from .schemas import CreateUser
 from auth import utils as auth_utils
 
 
@@ -24,3 +24,24 @@ async def create_user(session: AsyncSession, user_in: CreateUser) -> dict:
     return {
         "success": True,
     }
+
+
+async def delete_user(session: AsyncSession, user_in: str) -> dict[str, str | bool]:
+    stmt = select(User).where(User.username == user_in)
+    user = await session.scalar(stmt)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    await session.delete(user)
+    await session.commit()
+
+    user = await session.scalar(stmt)
+
+    if not user:
+        return {
+            "success": True,
+            "message": "user successfully deleted",
+        }
+    else:
+        raise HTTPException(status_code=404, detail="User not delete")

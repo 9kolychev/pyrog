@@ -1,17 +1,21 @@
-from fastapi import Depends, HTTPException, Form, status
+from fastapi import Depends, HTTPException, Form, status, Security
 from fastapi.routing import APIRouter
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.models.session import db_helper
 from auth import utils as auth_utils
+from .dependencies import validate_auth_user
 from . import crud
 from .schemas import CreateUser, UserSchema, TokenInfo
 
 router = APIRouter()
 
+security = HTTPBearer()
+
 
 @router.post(
-    "/",
+    "/signup/",
     response_model=dict,
     status_code=status.HTTP_201_CREATED,
 )
@@ -23,36 +27,6 @@ async def create_user(
         session=session,
         user_in=user,
     )
-
-
-async def validate_auth_user(
-    username: str = Form(),
-    password: str = Form(),
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
-):
-    unauthed_exc = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="invalid username or password",
-    )
-
-    users_db = await crud.get_user(session=session, username=username)
-
-    if not users_db.username:
-        raise unauthed_exc
-
-    if not auth_utils.validate_password(
-        password=password,
-        hashed_password=users_db.password,
-    ):
-        raise unauthed_exc
-
-    if not users_db.active:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="user inactive",
-        )
-
-    return users_db
 
 
 @router.post("/login/", response_model=TokenInfo)
@@ -70,3 +44,22 @@ async def auth_user_issue_jwt(
         access_token=token,
         token_type="Bearer",
     )
+
+
+@router.post("/delete/")
+async def delete_user(
+    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    credentials: HTTPAuthorizationCredentials = Security(security),
+):
+    token = credentials.credentials
+    decode_jwt = auth_utils.decode_jwt(token)
+    print(decode_jwt)
+    if decode_jwt:
+        return await crud.delete_user(
+            session=session,
+            user_in=decode_jwt.get("username"),
+        )
+    # return {
+    #     "success": True,
+    #     "message": "user successfully deleted",
+    # }

@@ -8,8 +8,9 @@ from api.pies.views import router as pies_router
 from api.users.views import router as users_router
 from api.profiles.views import router as profile_router
 from db.models import Base, db_helper
-from demo.auth.views import router as demo_auth
-from demo.auth.jwt_auth import router as demo_jwt_auth
+
+# from demo.auth.views import router as demo_auth
+# from demo.auth.jwt_auth import router as demo_jwt_auth
 
 
 @asynccontextmanager
@@ -29,15 +30,15 @@ api_v1.include_router(profile_router, prefix="/profile", tags=["Profile"])
 app.include_router(api_v1)
 
 demo = APIRouter(prefix="/demo")
-demo.include_router(demo_auth, prefix="/auth", tags=["Demo Auth"])
-demo.include_router(demo_jwt_auth, prefix="/jwt_auth", tags=["Demo JWT Auth"])
+# demo.include_router(demo_auth, prefix="/auth", tags=["Demo Auth"])
+# demo.include_router(demo_jwt_auth, prefix="/jwt_auth", tags=["Demo JWT Auth"])
 app.include_router(demo)
 
 
-@app.get("/")
+@app.get("/", tags=["Default"])
 def welcome_project():
     return {"message": "Welcome to project 'PyRog'"}
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)

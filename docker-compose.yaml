@@ -1,0 +1,24 @@
+version: "3.0"
+services:
+  web:
+    container_name: "web"
+#    image: python:3.11-alpine
+    build: .
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    volumes:
+      - .:/app
+    expose:
+      - 8000
+    ports:
+      - "8082:8000"
+
+#  test:
+#    build: .
+##    image: python:3.8-alpine
+#    command: allure --help
+##      - pip install --no-cache-dir -r requirements.txt
+##      - pytest --reruns 5 --durations=3 -s --ff --tb=line --alluredir=allure_result tests/test_api.py
+##      - pytest --alluredir=./allure_results --html=report.html tests/test_api.py
+##    working_dir: /app
+##    volumes:
+##      - /home/ke/1TOOLS/test-api-movies:/app
