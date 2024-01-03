@@ -41,3 +41,24 @@ alembic current
 ```
 docker-compose -f docker-compose-local.yaml up -d
 ```
+
+## PyTest
+```
+-s - prints
+-v
+--durations=3
+-vv
+pytest -s -v [testpath]
+pytest -s -v -k development [testpath]
+pytest -s -v -k "not development" [testpath] 
+pytest -s -v [testpath] --alluredir=allureress
+allure serve allureress
+```
+
+## Doker
+```
+docker build -t automation-tests .
+docker build --build-arg run_env=development -t automation-tests .
+doker run automation-tests
+docer cp $(docker ps -a -q | head -1):/allure-results
+```
