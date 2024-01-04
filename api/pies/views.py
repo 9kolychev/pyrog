@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from db.session import db_helper
+from db.models.session import db_helper
 from . import crud
 from .schemas import Pie, CreatePie, UpdatePie
 from .dependencies import pie_by_id

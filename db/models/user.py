@@ -1,18 +1,24 @@
-from sqlalchemy import Uuid
+from typing import TYPE_CHECKING
+
+from sqlalchemy import Uuid, String
 
 from sqlalchemy import Column, Boolean, String
-from sqlalchemy.orm import DeclarativeBase, declared_attr, Mapped, mapped_column
+from sqlalchemy.orm import (
+    relationship,
+    mapped_column,
+    declared_attr,
+    Mapped,
+    mapped_column,
+)
 from sqlalchemy.dialects.postgresql import UUID
 
 import uuid
 
+from .base import Base
 
-class Base(DeclarativeBase):
-    @declared_attr.directive
-    def __tablename__(cls) -> str:
-        return f"{cls.__name__.lower()}s"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
+if TYPE_CHECKING:
+    from .pie import Pie
+    from .profile import Profile
 
 
 class User(Base):
@@ -20,9 +26,7 @@ class User(Base):
 
     # user_id: Mapped[Uuid]
     # user_id: Mapped[str]
-    name: Mapped[str]
-    surname: Mapped[str]
-    email: Mapped[str]
+    username: Mapped[str] = mapped_column(String(32), unique=True)
     # is_active: Mapped[bool]
 
     # user_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -31,8 +35,5 @@ class User(Base):
     # email = Column(String, nullable=False, unique=True)
     # is_active = Column(Boolean(), default=True)
 
-
-class Pie(Base):
-    name: Mapped[str]
-    description: Mapped[str]
-    price: Mapped[int]
+    pies: Mapped[list["Pie"]] = relationship(back_populates="user")
+    profile: Mapped["Profile"] = relationship(back_populates="user")
