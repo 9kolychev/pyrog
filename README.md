@@ -31,6 +31,9 @@ alembic init -t async alembic
 alembic init migrations
 alembic revision --autogenerate -m "comment"
 alembic upgrade heads
+alembic downgrade base
+alembic history
+alembic current
 ```
 
 ## Docker

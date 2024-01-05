@@ -2,7 +2,7 @@ from typing import Annotated
 
 from annotated_types import MinLen, MaxLen
 from fastapi import HTTPException
-from pydantic import BaseModel, EmailStr, field_validator
+from pydantic import BaseModel, EmailStr, field_validator, ConfigDict
 
 import uuid
 import re
@@ -45,3 +45,11 @@ class CreateUser(BaseModel):
                 status_code=422, detail="Surname should contains only letters"
             )
         return value
+
+
+class UserSchema(BaseModel):
+    model_config = ConfigDict(strict=True)
+    username: str
+    password: bytes
+    email: EmailStr | None = None
+    active: bool = True
