@@ -15,8 +15,8 @@ TEST_DATABASE_URL = (
 
 class DBSettings(BaseModel):
     url: str = f"sqlite+aiosqlite:///{DB_PATH}"
-    # echo: bool = True
-    echo: bool = False
+    echo: bool = True
+    # echo: bool = False
 
 
 class AuthJWT(BaseModel):
