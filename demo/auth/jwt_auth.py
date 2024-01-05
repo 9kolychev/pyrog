@@ -21,7 +21,7 @@ router = APIRouter()
 
 # http_bearer = HTTPBearer()
 oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="/api/v1/demo-auth/jwt/login",
+    tokenUrl="/api/v1/demo/jwt-auth/login",
 )
 
 
@@ -79,7 +79,7 @@ def validate_auth_user(
             detail="user inactive",
         )
 
-    raise user
+    return user
 
 
 def get_current_token_payload(

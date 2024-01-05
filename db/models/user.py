@@ -21,19 +21,23 @@ if TYPE_CHECKING:
     from .profile import Profile
 
 
+# class User(Base):
+#     user_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+#     name = Column(String, nullable=False)
+#     surname = Column(String, nullable=False)
+#     email = Column(String, nullable=False, unique=True)
+#     is_active = Column(Boolean(), default=True)
+
+
 class User(Base):
     __tablename__ = "users"
 
     # user_id: Mapped[Uuid]
     # user_id: Mapped[str]
-    username: Mapped[str] = mapped_column(String(32), unique=True)
-    # is_active: Mapped[bool]
-
-    # user_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    # name = Column(String, nullable=False)
-    # surname = Column(String, nullable=False)
-    # email = Column(String, nullable=False, unique=True)
-    # is_active = Column(Boolean(), default=True)
+    username: Mapped[str] = mapped_column(String(length=32), unique=True)
+    email: Mapped[str | None] = mapped_column(String(length=64))
+    password: Mapped[str]
+    active: Mapped[bool]
 
     pies: Mapped[list["Pie"]] = relationship(back_populates="user")
     profile: Mapped["Profile"] = relationship(back_populates="user")

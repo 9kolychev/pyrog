@@ -37,5 +37,9 @@ async def update_product(
     return product
 
 
-async def delete_product(session: AsyncSession, product: Pie) -> None:
+async def delete_product(
+    session: AsyncSession,
+    product: Pie,
+) -> None:
     await session.delete(product)
+    await session.commit()

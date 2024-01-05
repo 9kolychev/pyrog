@@ -12,10 +12,10 @@ from db.config import settings
 def encode_jwt(
     payload: dict,
     private_key: str = settings.auth_jwt.private_key_path.read_text(),
-    algorithm=settings.auth_jwt.algorithm,
+    algorithm: str = settings.auth_jwt.algorithm,
     expire_minutes: int = settings.auth_jwt.access_token_expire_minutes,
     expire_timedelta: timedelta | None = None,
-):
+) -> str:
     to_encode = payload.copy()
     now = datetime.utcnow()
     if expire_timedelta:
@@ -27,7 +27,7 @@ def encode_jwt(
         iat=now,
     )
     encoded = jwt.encode(
-        payload,
+        to_encode,
         private_key,
         algorithm=algorithm,
     )
@@ -37,14 +37,14 @@ def encode_jwt(
 def decode_jwt(
     token: str | bytes,
     public_key: str = settings.auth_jwt.public_key_path.read_text(),
-    algorithm=settings.auth_jwt.algorithm,
-):
-    encoded = jwt.encode(
+    algorithm: str = settings.auth_jwt.algorithm,
+) -> dict:
+    decoded = jwt.decode(
         token,
         public_key,
-        algorithm=[algorithm],
+        algorithms=[algorithm],
     )
-    return encoded
+    return decoded
 
 
 def hash_password(
@@ -58,7 +58,7 @@ def hash_password(
 def validate_password(
     password: str,
     hashed_password: bytes,
-):
+) -> bool:
     return bcrypt.checkpw(
         password=password.encode(),
         hashed_password=hashed_password,

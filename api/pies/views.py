@@ -37,7 +37,7 @@ async def get_pie_by_id(pie: Pie = Depends(pie_by_id)):
     return pie
 
 
-@router.put("/{product_id}/")
+@router.put("/{pie_id}/")
 async def update_pie(
     pie_update: UpdatePie,
     pie: Pie = Depends(pie_by_id),
@@ -50,7 +50,7 @@ async def update_pie(
     )
 
 
-@router.put("/{product_id}/")
+@router.put("/{pie_id}/")
 async def update_pie_partial(
     pie_update: UpdatePie,
     pie: Pie = Depends(pie_by_id),
@@ -64,12 +64,12 @@ async def update_pie_partial(
     )
 
 
-@router.delete("/{product_id}/", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_pie(
+@router.delete("/{pie_id}/", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_product(
     pie: Pie = Depends(pie_by_id),
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ) -> None:
-    return await crud.delete_product(
+    await crud.delete_product(
         session=session,
         product=pie,
     )

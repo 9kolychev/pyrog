@@ -12,7 +12,15 @@ async def pie_by_id(
     pie_id: Annotated[int, Path(ge=1, lt=1_000)],
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ) -> Pie:
+    print(222)
+    print(222)
+    print(222)
+    print(222)
     pie = await crud.get_product(session=session, product_in=pie_id)
+    print(11111)
+    print(pie)
+    print(pie)
+    print(pie)
     if pie is not None:
         return pie
 

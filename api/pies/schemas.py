@@ -1,13 +1,18 @@
-from typing import Annotated
+from enum import Enum
+from pydantic import BaseModel, ConfigDict
 
-from annotated_types import MinLen, MaxLen
-from pydantic import BaseModel, EmailStr, ConfigDict
+
+class NutritionalValue(Enum):
+    Squirrels: str
+    Fats: str
+    Carbohydrates: str
 
 
 class PieBase(BaseModel):
+    user_id: int
     name: str
     description: str
-    price: int
+    nutritional_value: str | None = None
 
 
 class CreatePie(PieBase):
@@ -19,9 +24,10 @@ class UpdatePie(CreatePie):
 
 
 class UpdatePiePartial(CreatePie):
+    user_id: int | None = None
     name: str | None = None
     description: str | None = None
-    price: int | None = None
+    nutritional_value: str | None = None
 
 
 class Pie(PieBase):

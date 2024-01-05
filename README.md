@@ -19,6 +19,7 @@ poetry shell - (pip): source env/bin/activate
 poetry run python (uvicorn, celery)
 poetry add fastapi
 poetry add black --group dev
+poetry remove envparse
 poetry show --tree
 poetry show --latest
 poetry env info

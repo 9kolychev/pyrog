@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import TYPE_CHECKING
 
 from sqlalchemy import String, Text, ForeignKey
@@ -9,12 +8,6 @@ from .mixins import UserRelationMixin
 
 if TYPE_CHECKING:
     from .user import User
-
-
-class NutritionalValue(Enum):
-    Squirrels: str
-    Fats: str
-    Carbohydrates: str
 
 
 class Pie(UserRelationMixin, Base):
@@ -28,7 +21,7 @@ class Pie(UserRelationMixin, Base):
         default="",
         server_default="",
     )
-    nutritional_value: Mapped[NutritionalValue]
+    nutritional_value: Mapped[str | None]
 
     # user_id: Mapped[int] = mapped_column(
     #     ForeignKey("users.id"),
